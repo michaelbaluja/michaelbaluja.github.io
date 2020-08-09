@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Personal Website/Online Resume" />
+        <meta name="author" content="Michael Baluja" />
+        <title>Michael Baluja</title>
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top"
+                ><span class="d-block d-lg-none">Michael Baluja</span><span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="assets/img/profile.png" alt="" /></span></a
+            ><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="https://michaelbaluja.com">Home</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#background">Background</a></li>
+					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#task">Task</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#implementation">Implementation</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#challenges">Challenges</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#thoughts">Thoughts</a></li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+            <!-- Background-->
+            <section class="resume-section" id="background">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Background</h2>
+                    <p>
+                        LyricalAnalysis was first born out of a fun thought about wanting to see how my favorite artist (Childish Gambino) has 
+                        changed across the course of his different studio albums. While writing, I quickly realized that my initial implementation
+                        was requiring much more work to be able to only look at the studio albums for one artist. This required providing text files
+                        including track lists for the albums to consider, and it became a much better to idea to simply consider all of the albums
+                        that the artist put out. Because of this, the best implementation seemed to be the most general implementation, and a simple
+                        data science writeup project turned into a full-fledged project.
+                    </p>
+                </div>
+            </section>
+            <!-- Task-->
+            <section class="resume-section" id="task">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Task</h2>
+                    <p>
+                        To be able to analyze the sentiment of the artist/song that you want to analyze, the implementation can be broken into a couple
+                        of different tasks: obtaining the lyrics, analyzing the lyrics, and displaying the finalized analysis.
+                    </p>
+                </div>
+            </section>
+            <!-- Implementation-->
+            <section class="resume-section" id="implementation">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Implementation</h2>
+                        <h3>
+                            Obtaining the lyrics
+                        </h3>
+                            <p>
+                                In order to obtain the lyrics that we wish to analyze, we make use of the <a href='https://github.com/johnwmillr/LyricsGenius'>LyricsGenius</a>
+                                python-based genius.com api wrapper. This library provides all of the necessary usability available from the genius.com
+                                proper api. 
+                            </p>
+                            <p>
+                                Making use of the LyricsGenius library requires that the user provides a genius api key, either via the runtime
+                                arguments, or as a separate input once the program starts. There are addition runtime arguments that are used to prompt
+                                how analysis should be done. For instance, the user can choose to analyze a single song, an entire artist based on each song,
+                                or an artist based on each of their albums. Note that regardless of which option is chosen for an artist, there is the 
+                                option to later select specific albums/songs so that the entire discography does not need to be analyzed.
+                            </p>
+                            <p>
+                                Once the lyrics are properly obtained, a handful of sanitization steps are implemented in order to ensure that the proper lyrics
+                                are being analyzed. First, the string of lyrics is vectorized in order to give us a list of words for us to analyze the sentiment for.
+                                On the song-wide scope, there are a few custom-made features that can be used to remove any remixed songs or unfinished songs, since 
+                                these types of songs are usually repeats, and would only skew the sentiment ratings. These two user-specified flags, remove_remix and
+                                remove_unfinished, are also able to be specified at runtime, and are only available for analysis on artists as a whole. Additionally, 
+                                on the lyric-wide scope of things, the common list of english stopwords is checked in order to remove all non-sentiment contributing 
+                                words from our list of lyric words to analyze, and we also ensure that all common punctuation is also removed. 
+                            </p>
+                        <h3>
+                            Analyzing the lyrics
+                        </h3>
+                            <p>
+                                After obtaining the lyrics, analysis is much more straightforward. Lyrical analysis is conducted using the sentiment polarity
+                                analyzer that is made available through the nltk toolkit. Once the songs/songs are passed through the analyzer, the positive/negative/
+                                neutral sentiment scores are recorded and properly weighted in order to judge the sentiment of a song. Note that while nltk does provide
+                                a composite score that will give us a sentiment label for a given list of lyric words, we are interested in sentiment breakdowns across
+                                the positive/negative/neutral categories, not just the overall label.
+                            </p>
+                        <h3>
+                            Displaying the analysis
+                        </h3>
+                            <p>
+                                Sentiment analysis display is done through the use of wrapper functionality built on top of graphing capabilities provided by the 
+                                matplotlib python plotting library. Two different methods are available for analysis display: a pie chart that displays proportion 
+                                across sentiment categories for individual songs/albums, and a line chart to show the difference in sentiment categories across 
+                                different albums and songs. Again, a runtime flag is available at runtime for the user to specify how they would like to view the 
+                                sentiment breakdown.
+                            </p>
+                </div>
+            </section>
+            <!-- Challenges-->
+            <section class="resume-section" id="challenges">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Challenges</h2>
+                    <p>
+                        While a handful of different problems were presented during the development of this project, the largest problem was presented up front with the
+                        lyric-wrangling from the genius API. While there was initial issues with ensuring functionality of the genius API, the easiest solution to this problem
+                        seemed to be using the LyricsGenius library in order to access the API without having to wrestle with the API otherwise. Since the LyricsGenius library
+                        provides all of the same functionality as the base genius API does, no issue has arised from this workaround. For future feature addition with something
+                        like analysis of the artists/albums/songs from a user's Spotify library, a similar workaround is present through the use of the python-based Spotify API
+                        library spotipy. 
+                    </p>
+                    <p>
+                        Another issue that presented itself involved removing remixed songs from the songs to analyze when analyzing an artist by album. While the LyricsGenius 
+                        library includes functionality to remove songs based on certain keywords, this functinality doesn't entirely solve the issue. Even though a song may include
+                        the word 'remix' in it, it is not necessary a remix in and of itself. In order to resolve this issue, special sanitization functions were created and implemented
+                        in order to make sure that the 'remix' tag at the end of the song would ensure that the song is removed, while not removing songs that don't appear to be remixes 
+                        (in order to see the functionality behind this, the source code is available under lib/utils in the github repository). Similar functionality was implemented to remove
+                        unfinished songs that may include a tag such as (leak), (demo), or other similar songs. Additional functionality should be included in order to give the user the 
+                        ability to choose certain keywords that should be excluded, either in addition to or instead of the keywords that are currently in use.
+                    </p>
+                </div>
+            </section>
+            <!-- Thoughts-->
+            <section class="resume-section" id="thoughts">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Thoughts</h2>
+                    <p>
+                        First and foremost, it is great to see a functional tool created based off of the initial idea to analyze my favorite artist. While the original functionality has been
+                        implemented, there is certainly room for even further improvement. 
+                    </p>
+                    <p>
+                        While the posted sentiment is good as a general indication of how songs or albums may be, the sentiment analysis method used doesn't seem to 
+                        capture complex sentiment that may be constructed over the course of a line, verse, or even an entire song. In order to better analyze sentiment 
+                        in this regard, a better sentiment analysis technique likely involved some sort of memory-based analysis, such as an LSTM/RNN neural network. Additionally,
+                        there is likely also a better way to analyze sentiment over the course of an entire album. Instead of saying that the sentiment of an album is simply the average of 
+                        the sentiment of the songs in that album, a similar memory-based technique should be implemented in order to analyze album sentiment over the course of the first word
+                        in an album to the last word in an album.
+                    </p>
+                    <p>
+                        In terms of additional work for this project, two main points come to mind. First up is the ability to analyze sentiment over a single album, as opposed to only analyzing
+                        a song or artist. While this may seem easy at face value, the lack of an album element in the genius API means that additional wrangling will be required in order to implement 
+                        this. In order to implement this functionality, an initial proposal is to search for the tracklist of the user's requested album, and then making individual calls to the 
+                        Genius API for each song in the tracklist. An additional feature to add is the ability for a user to enter their spotify username and then analyze the sentiment of select artists/
+                        albums/songs from their library.
+                    </p>
+                </div>
+            </section>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
