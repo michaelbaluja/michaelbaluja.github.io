@@ -6,3 +6,6 @@ _notes/
 /node_modules/
 assets/.DS_Store
 assets/img/.DS_Store
+.DS_Store
+Automation-Analysis.html
+.vscode/
